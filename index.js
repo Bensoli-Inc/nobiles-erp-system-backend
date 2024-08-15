@@ -13,12 +13,19 @@ const secretKey = process.env.SECRET_KEY;
 const bcrypt = require('bcryptjs');
 const { authMiddleware, roleMiddleware } = require('./middleware/auth');
 const founderSecretKey = process.env.FOUNDER_SECRET_KEY
+const mongoUrl = process.env.MONGO_URI
 
 const app = express();
 app.use(express.json());
 app.use(cors());
  
-mongoose.connect("mongodb+srv://benswambua96:@Bensoli01@cluster11.3anhd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster11");
+console.log('MONGO DB CONNECTION:', process.env.MONGO_URI);
+
+mongoose.connect(mongoUrl)
+ .then(() => console.log('Connected to MongoDB'))
+ .catch(err => console.error('Error connecting to MongoDB:', err));
+ 
+
 console.log('Secret Key:', process.env.SECRET_KEY);
 //AUTH APIS
 //reg api
