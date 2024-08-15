@@ -14,12 +14,13 @@ const bcrypt = require('bcryptjs');
 const { authMiddleware, roleMiddleware } = require('./middleware/auth');
 const founderSecretKey = process.env.FOUNDER_SECRET_KEY
 const mongoUrl = process.env.MONGO_URI
-
+const frontEndUrl = process.env.FRONTEND_URL
 const app = express();
 app.use(express.json());
-app.use(cors());
+
+// app.use(cors);
 const corsOptions = {
-   origin: 'https://nobiles-erp-system.vercel.app', // Replace with your frontend URL
+   origin: `${frontEndUrl}`, // Replace with your frontend URL
    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify the methods allowed
    credentials: true // If your frontend includes cookies or other credentials
  };
@@ -40,11 +41,31 @@ console.log('Secret Key:', process.env.SECRET_KEY);
 app.post('/register', async (req, res) => {
    try {
       const {username, email, password, institutionName, role} = req.body;
-      const user = new UserModel({username, email, password, institutionName, role});
+
+      if (role !== 'admin') {
+         return res.status(400).json({ message: 'Invalid role. Only admin can register through this route.' });
+       } 
+      
+      const normalizedUsername = username.toLowerCase();
+
+      const user = new UserModel({username: normalizedUsername, email, password, institutionName, role});
       await user.save();
       res.status(201).json({message: 'User registered Successfully'});
    } catch (err) {
-      res.status(400).json({message: 'Error registering user', error: err.message});
+      console.error('Error during registration:', err); 
+
+       // Checking if the error is a MongoDB duplicate key error
+    if (err.code === 11000) {
+      if (err.message.includes('email')) {
+        return res.status(400).json({ message: 'An account with this email already exists.' });
+      }
+   
+      if (err.message.includes('username')) {
+        return res.status(400).json({ message: 'An account with this username already exists.' });
+      }
+    }
+    // General error handling
+    res.status(400).json({ message: 'Error registering admin', error: err.message });
    }
 });
 
