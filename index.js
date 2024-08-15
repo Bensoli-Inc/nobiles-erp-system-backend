@@ -18,7 +18,13 @@ const mongoUrl = process.env.MONGO_URI
 const app = express();
 app.use(express.json());
 app.use(cors());
+const corsOptions = {
+   origin: 'https://nobiles-erp-system.vercel.app', // Replace with your frontend URL
+   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify the methods allowed
+   credentials: true // If your frontend includes cookies or other credentials
+ };
  
+ app.use(cors(corsOptions));
 console.log('MONGO DB CONNECTION:', process.env.MONGO_URI);
 
 mongoose.connect(mongoUrl)
