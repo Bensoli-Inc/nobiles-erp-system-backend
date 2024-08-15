@@ -88,7 +88,7 @@ app.post('/login', async (req, res) => {
          return res.status(400).json({message: 'invalid password'});
       }
       if (!user.isActive) {
-         return res.status(403).json({message: 'Account is deactivated. Contact admin.'});
+         return res.status(403).json({message: 'Account is deactivated. Contact support.'});
       }
       const token = jwt.sign({_id: user._id, username: user.username, role: user.role}, secretKey, {expiresIn: '1h'});
       console.log('Generated Token:', token); // Log generated token
