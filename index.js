@@ -28,7 +28,7 @@ const corsOptions = {
  app.use(cors(corsOptions));
  app.options('*', cors(corsOptions)); // Preflight requests
 
-console.log('MONGO DB CONNECTION:', process.env.MONGO_URI);
+console.log('MONGO DB CONNECTION URL:', process.env.MONGO_URI);
 
 mongoose.connect(mongoUrl)
  .then(() => console.log('Connected to MongoDB'))
