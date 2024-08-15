@@ -17,8 +17,14 @@ const founderSecretKey = process.env.FOUNDER_SECRET_KEY
 const app = express();
 app.use(express.json());
 app.use(cors());
-
-mongoose.connect("mongodb://127.0.0.1:27017/employee");
+const corsOptions = {
+   origin: 'https://nobiles-erp-system.vercel.app',
+   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+   credentials: true, // If you need to allow cookies or authentication headers
+ };
+ 
+ app.use(cors(corsOptions));
+mongoose.connect("mongodb+srv://benswambua96:@Bensoli01@cluster11.3anhd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster11");
 console.log('Secret Key:', process.env.SECRET_KEY);
 //AUTH APIS
 //reg api
