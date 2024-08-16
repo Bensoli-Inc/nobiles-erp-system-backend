@@ -202,15 +202,15 @@ app.get('/staff', authMiddleware, roleMiddleware(['admin']), async (req, res) =>
 app.put('/deactivate/:id', authMiddleware, async (req, res) => {
    try {
       const user = await UserModel.findById(req.params.id);
-      if (!user) return res.status(404).json({message: 'user not found'});
-      if ((req.user.role === 'admin' && user.role !== 'staff')  || req.user.role === 'staff') {
-         return res.status(403).json({message: 'Access denied. You do not have permission to perform this action'});
+      if (!user) return res.status(404).json({message: 'User not found'})
+      if ((req.user.role === 'admin' && user.role !== 'staff') || req.user.role === 'staff') {
+         return res.status(403).json({ message: 'Access denied. You do not have permission to perform this action.' });
       }
       user.isActive = false;
       await user.save();
-      res.json({message: 'Account deactivated successfully'});
+    res.status(201).json({ message: 'Account deactivated' });
    } catch (err) {
-      res.status(500).json({message: 'Error deactivating account', error: err.message});
+      res.status(500).json({ message: 'Error deactivating account', error: err.message });
    }
 });
 
